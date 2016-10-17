@@ -1,25 +1,39 @@
+var dbconn = require('../data/dbconnection.js');
 var hotelData = require('../data/hotel-data.json');
 
 module.exports.hotelsGetAll = function(req, res){
-    console.log('Get the hotels');
-    console.log(req.query);
-    
-    var offset = 0;
-    var count = 5;
-    
-    if(req.query && req.query.offset){
-        offset = parseInt(req.query.offset, 10);
-    }
-    
-    if(req.query && req.query.count){
-        count = parseInt(req.query.count, 10);
-    }
-    
-    var returnData = hotelData.slice(offset,offset+count);
-    
-    res
-        .status(200)
-        .json(returnData);
+	
+	var db = dbconn.get();
+	var collection = db.collection('hotels');
+	
+	var docs = collection.find();
+	
+	console.log('Found Hotels', docs);
+	res
+		.status(200)
+		.json(docs);
+	
+//	console.log("db", db);
+//	
+//    console.log('Get the hotels');
+//    console.log(req.query);
+//    
+//    var offset = 0;
+//    var count = 5;
+//    
+//    if(req.query && req.query.offset){
+//        offset = parseInt(req.query.offset, 10);
+//    }
+//    
+//    if(req.query && req.query.count){
+//        count = parseInt(req.query.count, 10);
+//    }
+//    
+//    var returnData = hotelData.slice(offset,offset+count);
+//    
+//    res
+//        .status(200)
+//        .json(returnData);
 };
 
 module.exports.hotelsGetOne = function(req, res){
