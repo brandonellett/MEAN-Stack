@@ -1,12 +1,8 @@
-var dbconn = require('../data/dbconnection.js');
-var ObjectId = require('mongodb').ObjectId;
-var hotelData = require('../data/hotel-data.json');
+var mongoose = require('mongoose');
+var Hotel = mongoose.model('Hotel');
 
 module.exports.hotelsGetAll = function(req, res){
 	
-	var db = dbconn.get();
-	var collection = db.collection('hotels');
-    
     var offset = 0;
     var count = 5;
     
@@ -18,23 +14,18 @@ module.exports.hotelsGetAll = function(req, res){
         count = parseInt(req.query.count, 10);
     }
 	
-	collection.find().skip(offset).limit(count).toArray(function(err, docs){
-        console.log('Found Hotels', docs);
-	   res.status(200).json(docs);    
-    });
+	Hotel.find().skip(offset).limit(count).exec(function(err, hotels){
+		console.log('Found hotels', hotels.length);
+		res.json(hotels);
+	});
 };
 
 module.exports.hotelsGetOne = function(req, res){
     
-    var db = dbconn.get();
-	var collection = db.collection('hotels');
-    
     var hotelId = req.params.hotelId;
     console.log('Get the hotelId', hotelId);
     
-    collection.findOne({
-        _id: ObjectId(hotelId)
-    }, function(err, doc){
+    Hotel.findById(hotelId).exec(function(err, doc){
         res.status(200).json(doc);    
     });
 };
@@ -52,8 +43,8 @@ module.exports.hotelsAddOne = function(req, res){
         newHotel.stars = parseInt(req.body.stars, 10);
         console.log(newHotel);
         collection.insertOne(newHotel, function(err, response){
-            console.log(response);
-            res.status(201).json(response);
+            console.log(response.ops);
+            res.status(201).json(response.ops);
         });
     } else{
         console.log('Data missing from body');
