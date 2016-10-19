@@ -14,7 +14,7 @@ var runGeoQuery = function(req, res){
     
     var geoOptions = {
         spherical : true,
-        maxDistance : 2000,
+        maxDistance : 20000,
         num : 5
     };
     
