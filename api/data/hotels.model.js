@@ -52,9 +52,9 @@ var hotelSchema = new mongoose.Schema({
 		//Always store coordinates longitude (E/W), latitude (N/S)
 		coordinates : {
 			type : [Number],
-			index : '2dshere'
+			index : '2dsphere'
 		}
 	}
 });
 
-mongoose.model('Hotel', hotelSchema, 'hotels');//the collection is not required 
+mongoose.model('Hotel', hotelSchema);//the collection is not required 
