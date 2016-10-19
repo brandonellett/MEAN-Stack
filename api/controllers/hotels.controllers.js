@@ -14,7 +14,7 @@ var runGeoQuery = function(req, res){
     
     var geoOptions = {
         spherical : true,
-        maxDistance : 20000,
+        maxDistance : 200,
         num : 5
     };
     
@@ -29,8 +29,9 @@ module.exports.hotelsGetAll = function(req, res){
 	
     var offset = 0;
     var count = 5;
+    var maxCount = 10;
     
-    if(req.query && req.query.lat && req.query.lng){
+    if(req.query && req.query.lng && req.query.lat){
         runGeoQuery(req, res);
         return;
     }
@@ -42,10 +43,26 @@ module.exports.hotelsGetAll = function(req, res){
     if(req.query && req.query.count){
         count = parseInt(req.query.count, 10);
     }
+    
+    if(isNaN(offset) || isNaN(count)){
+        res.status(400).json({"message" : "If supplied in querystring count and offset should be numbers"});
+        return;
+    }
+    
+    if(count > maxCount){
+        console.log("You can only request a max count of 10 at this time");
+        res.status(400).json({"message" : "Count limit of " + maxCount + " exceeded"});
+        return;
+    }
 	
 	Hotel.find().skip(offset).limit(count).exec(function(err, hotels){
-		console.log('Found hotels', hotels.length);
-		res.json(hotels);
+        if (err){
+            console.log("Error finding hotels");
+            res.status(500).json(err);
+        } else {
+            console.log('Found hotels', hotels.length);
+            res.json(hotels);
+        }
 	});
 };
 
@@ -55,7 +72,14 @@ module.exports.hotelsGetOne = function(req, res){
     console.log('Get the hotelId', hotelId);
     
     Hotel.findById(hotelId).exec(function(err, doc){
-        res.status(200).json(doc);    
+        if (err){
+            console.log("Error finding hotel");
+            res.status(500).json(err);
+        } else if(!doc){
+            res.status(404).json({"message" : "Hotel ID not found"});        
+        } else {
+            res.status(200).json(doc);  
+        }
     });
 };
 
