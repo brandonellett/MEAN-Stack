@@ -11,16 +11,19 @@ router
 
 router
     .route('/hotels/:hotelId')
-    .get(cntrlHotels.hotelsGetOne);
+    .get(cntrlHotels.hotelsGetOne)
+    .put(cntrlHotels.hotelsUpdateOne);
 
 //Review Routes
 router
     .route('/hotels/:hotelId/reviews')
-    .get(cntrlReviews.reviewsGetAll);
+    .get(cntrlReviews.reviewsGetAll)
+    .post(cntrlReviews.reviewsAddOne);
 
 router
     .route('/hotels/:hotelId/reviews/:reviewId')
-    .get(cntrlReviews.reviewsGetOne);
+    .get(cntrlReviews.reviewsGetOne)
+    .put(cntrlReviews.reviewsUpdateOne)
 
 
 module.exports = router;
