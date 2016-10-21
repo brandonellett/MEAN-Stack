@@ -251,14 +251,3 @@ module.exports.hotelsDeleteOne = function(req, res) {
       }
     });
 };
-
-
-
-
-
-
-
-
-
-
-
