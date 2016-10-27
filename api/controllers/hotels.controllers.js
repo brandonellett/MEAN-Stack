@@ -48,6 +48,7 @@ var runGeoQuery = function(req, res) {
 module.exports.hotelsGetAll = function(req, res) {
 
   console.log('GET the hotels');
+  console.log('Requested by: ' + req.user);
   console.log(req.query);
 
   var offset = 0;
